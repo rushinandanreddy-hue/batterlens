@@ -1,0 +1,24 @@
+{
+  "name": "batterlens",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A cricket scouting dashboard that analyzes ODI batting weaknesses and CWC 2027 host-condition fit.",
+  "author": "Rushinandan Reddy",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "test": "node app.test.js",
+    "build:data": "node scripts/build-cwc-all-format-data.mjs data/cwc-2027-odi.js"
+  },
+  "keywords": [
+    "cricket",
+    "odi",
+    "cwc-2027",
+    "analytics",
+    "sports-data",
+    "dashboard"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

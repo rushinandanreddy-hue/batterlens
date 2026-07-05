@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="BatterLens - analyze ODI player pools, all-format batting weaknesses, and CWC 2027 host-condition fit."
+    />
+    <meta name="author" content="Rushinandan Reddy" />
+    <title>BatterLens | CWC 2027 All-Format Scout</title>
+    <link rel="stylesheet" href="styles.css?v=cwc-advanced-models-1" />
+    <script src="data/cwc-2027-odi.js?v=cwc-advanced-models-1" defer></script>
+    <script src="app.js?v=cwc-advanced-models-1" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a href="#" class="brand" aria-label="BatterLens home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>
+            <strong>BatterLens</strong>
+            <small>CWC 2027 all-format scout</small>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <a
+            class="button button-primary source-button"
+            href="https://cricsheet.org/downloads/"
+            target="_blank"
+            rel="noreferrer"
+          >Cricsheet source</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">ODI World Cup 2027</p>
+            <h1>Scout ODI batters for 2027 host conditions.</h1>
+            <p class="hero-description">
+              Recent ODI form builds the CWC player pool. Tests, ODIs, and T20Is build the
+              weakness conclusion by bowler type, arm, phase, matchup, and host conditions.
+            </p>
+          </div>
+          <div class="dataset-card">
+            <div>
+              <p class="caption">Projected player pools</p>
+              <p class="dataset-name" id="dataset-name">Cricsheet men's international archives</p>
+              <p class="dataset-note" id="dataset-note">Loading match coverage...</p>
+              <p class="dataset-links">
+                <a href="https://cricsheet.org/downloads/" target="_blank" rel="noreferrer">
+                  Scorecard source
+                </a>
+                <a
+                  href="https://www.icc-cricket.com/media-releases/hosts-of-u19-icc-global-events-until-2027-announced"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  CWC pathway
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="filter-bar" aria-label="Analysis filters">
+          <label class="select-field">
+            <span>Country</span>
+            <select id="team-filter"></select>
+          </label>
+          <label class="select-field">
+            <span>ODI batter</span>
+            <select id="batter-filter"></select>
+          </label>
+          <label class="select-field">
+            <span>Compare with</span>
+            <select id="compare-player-filter"></select>
+          </label>
+          <label class="select-field">
+            <span>Projection tier</span>
+            <select id="tier-filter"></select>
+          </label>
+          <label class="select-field">
+            <span>Host focus</span>
+            <select id="host-filter"></select>
+          </label>
+          <div class="batter-profile" id="batter-profile"></div>
+        </section>
+
+        <section class="format-switcher" aria-label="Format analysis selector">
+          <div>
+            <p class="caption">Format view</p>
+            <h2>Choose weakness evidence</h2>
+          </div>
+          <div class="format-buttons" id="format-buttons"></div>
+        </section>
+
+        <section class="metrics" id="metrics" aria-label="Performance overview"></section>
+
+        <div class="dashboard-grid">
+          <section class="panel probability-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Predictive model</p>
+                <h2>Dismissal probability</h2>
+              </div>
+            </div>
+            <div id="dismissal-probability"></div>
+          </section>
+
+          <section class="panel probability-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Predictive model</p>
+                <h2>Win probability</h2>
+              </div>
+            </div>
+            <div id="win-probability"></div>
+          </section>
+
+          <section class="panel report-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">AI-generated</p>
+                <h2>Match report</h2>
+              </div>
+            </div>
+            <div id="generated-report"></div>
+          </section>
+
+          <section class="panel compare-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Selection view</p>
+                <h2>Compare two players</h2>
+              </div>
+            </div>
+            <div id="player-comparison"></div>
+          </section>
+
+          <section class="panel heatmap-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Shot map proxy</p>
+                <h2>Shot heatmap</h2>
+              </div>
+            </div>
+            <div id="shot-heatmap"></div>
+          </section>
+
+          <section class="panel roster-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Country player pools</p>
+                <h2>Projected ODI squad watchlist</h2>
+              </div>
+              <span class="confidence-tag" id="roster-count"></span>
+            </div>
+            <p class="helper-text">
+              Select a player to open their ODI profile. These are realistic active player pools
+              from recent ODI appearances, not official CWC 2027 squads.
+            </p>
+            <div class="roster-grid" id="squad-watchlist"></div>
+          </section>
+
+          <section class="panel pitch-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Real pressure signals</p>
+                <h2>Weakness matchups</h2>
+              </div>
+              <div class="risk-key" aria-label="Risk color key">
+                <span class="key-low">Lower</span>
+                <span class="key-medium">Watch</span>
+                <span class="key-high">High</span>
+              </div>
+            </div>
+            <p class="helper-text">
+              Select a signal to inspect balls, scoring rate, dots, and dismissals. Signals now
+              combine Test, ODI, and T20I outcomes.
+            </p>
+            <div class="pitch-map-wrap">
+              <div class="breakdown matchup-breakdown" id="pressure-signals-list"></div>
+              <article class="zone-detail" id="pressure-detail"></article>
+            </div>
+          </section>
+
+          <section class="panel bowler-style-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Which ball type troubles him?</p>
+                <h2>Bowler-type trouble</h2>
+              </div>
+              <div class="risk-key" aria-label="Risk color key">
+                <span class="key-low">Lower</span>
+                <span class="key-medium">Watch</span>
+                <span class="key-high">High</span>
+              </div>
+            </div>
+            <p class="helper-text">
+              Real all-format outcomes grouped by bowler arm and type: right-arm pace, left-arm
+              pace, off spin, leg spin, left-arm orthodox, and wrist spin where known.
+            </p>
+            <div class="line-length-map" id="bowling-style-map"></div>
+            <article class="zone-detail" id="bowling-style-detail"></article>
+          </section>
+
+          <section class="panel line-length-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">CWC 2027 conditions</p>
+                <h2>Host-country fit</h2>
+              </div>
+              <div class="risk-key" aria-label="Risk color key">
+                <span class="key-low">Lower</span>
+                <span class="key-medium">Watch</span>
+                <span class="key-high">High</span>
+              </div>
+            </div>
+            <p class="helper-text">
+              Player records are split for South Africa, Zimbabwe, and Namibia. This shows how
+              each batter has actually performed in similar host-country ODI conditions.
+            </p>
+            <div class="line-length-map" id="host-condition-map"></div>
+            <article class="zone-detail" id="host-condition-detail"></article>
+          </section>
+
+          <section class="panel wagon-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Pitch model</p>
+                <h2>How host pitches behave</h2>
+              </div>
+            </div>
+            <p class="helper-text">
+              Uses host-country ODI run rate, dot pressure, wicket rate, boundary rate, innings
+              phase, bowler type, bowling arm, and dismissal mode. This is a conditions proxy, not
+              broadcast ball-tracking.
+            </p>
+            <div class="wagon-layout">
+              <div class="venue-profile-grid" id="venue-profiles"></div>
+              <article class="zone-detail" id="venue-detail"></article>
+            </div>
+          </section>
+
+          <section class="panel signals-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Ranked findings</p>
+                <h2>Weakness signals</h2>
+              </div>
+            </div>
+            <div id="weakness-signals" class="signals"></div>
+          </section>
+
+          <section class="panel breakdown-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Out patterns</p>
+                <h2>Dismissal modes</h2>
+              </div>
+            </div>
+            <div id="dismissal-breakdown" class="breakdown"></div>
+          </section>
+
+          <section class="panel breakdown-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Situation</p>
+                <h2>Innings phase</h2>
+              </div>
+            </div>
+            <div id="phase-breakdown" class="breakdown"></div>
+          </section>
+
+          <section class="panel plan-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="caption">Tactical output</p>
+                <h2>Evidence summary</h2>
+              </div>
+              <span class="confidence-tag" id="plan-confidence"></span>
+            </div>
+            <div id="bowling-plan"></div>
+          </section>
+
+          <section class="panel import-panel">
+            <p class="caption">Data coverage</p>
+            <h2>What is real here</h2>
+            <p>
+              Runs, balls, dot balls, dismissals, innings phases, bowlers, opponents, countries,
+              cities, venues, and match dates come from Cricsheet's men's international JSON
+              archives.
+            </p>
+            <p class="helper-text">
+              True line and length is not present in Cricsheet scorecards, so the app does not
+              guess it. Bowler-type conclusions use a transparent style map, with unknown styles
+              left visible in the data. CWC 2027 squads are not official yet.
+            </p>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Pressure score combines real dot-ball rate, strike-rate restriction, and outs, adjusted
+          for sample size. Player pools are ODI projections; weakness conclusions use Tests, ODIs,
+          and T20Is. CWC 2027 squads are not final.
+        </p>
+        <p class="ownership-note">
+          Built by Rushinandan Reddy. Copyright (c) 2026 Rushinandan Reddy. All rights reserved.
+          Match data source: Cricsheet. Not affiliated with Cricsheet, ICC, or any cricket board.
+        </p>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
