@@ -28,18 +28,6 @@ weakness conclusions by bowler type, bowler arm, phase, matchup, and host-countr
 Cricsheet currently withholds Afghanistan men's matches, so Afghanistan player projections are not
 included in this real-data build.
 
-## Ownership And License
-
-BatterLens is an original software project by **Rushinandan Reddy**.
-
-- Code and UI: Copyright (c) 2026 Rushinandan Reddy.
-- License: All rights reserved. See [LICENSE](LICENSE).
-- Match data source: Cricsheet men's international JSON archives.
-- This project is not affiliated with Cricsheet, ICC, BCCI, or any cricket board.
-
-The app can be used as a GitHub portfolio project. The software belongs to the project author and
-may not be copied, modified, distributed, or reused without permission. Third-party cricket data,
-team names, player names, and competition names remain with their respective rights holders.
 
 ## Run The App
 
