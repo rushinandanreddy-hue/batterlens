@@ -29,64 +29,6 @@ Cricsheet currently withholds Afghanistan men's matches, so Afghanistan player p
 included in this real-data build.
 
 
-## Run The App
-
-Easiest option: double-click this file in Finder:
-
-```text
-Open BatterLens.html
-```
-
-This opens the app directly in your browser without starting a local server.
-
-On macOS, you can double-click:
-
-```text
-Start BatterLens.command
-```
-
-That starts the local server and opens `http://127.0.0.1:4173/`. Keep the Terminal window open
-while using the app.
-
-From this folder:
-
-```bash
-python3 -m http.server 4173
-```
-
-Then open `http://localhost:4173`.
-
-If you have `npm` installed, you can also use:
-
-```bash
-npm start
-```
-
-To run the lightweight logic tests:
-
-```bash
-node app.test.js
-```
-
-Or, with `npm`:
-
-```bash
-npm test
-```
-
-## Refresh The Data
-
-Fetch the latest Cricsheet international archives and rebuild the browser asset:
-
-```bash
-node scripts/build-cwc-all-format-data.mjs data/cwc-2027-odi.js
-```
-
-You can also pass local Cricsheet zip files:
-
-```bash
-node scripts/build-cwc-all-format-data.mjs data/cwc-2027-odi.js /path/to/odis_json.zip /path/to/tests_json.zip /path/to/t20s_json.zip
-```
 
 ## What It Shows
 
@@ -125,21 +67,6 @@ BatterLens is more than a static mockup:
 - It includes automated tests for the generated data contract and core app behavior.
 - It includes a GitHub Actions workflow that runs tests on every push or pull request.
 
-## Publish On GitHub
-
-Create an empty repository on GitHub, then run these commands from this project folder:
-
-```bash
-git add .
-git commit -m "Build CWC 2027 ODI scouting dashboard"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/batterlens.git
-git push -u origin main
-```
-
-Replace `YOUR_USERNAME` with your GitHub username. Since this is a static HTML/CSS/JavaScript app,
-you can host it with GitHub Pages. In the GitHub repo, open Settings -> Pages, choose
-"Deploy from a branch", select `main`, and use the repository root.
 
 ## Pressure Score
 
